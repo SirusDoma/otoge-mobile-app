@@ -42,7 +42,7 @@ class StoreCard extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    margin: const EdgeInsets.only(right: 5),
+                    margin: const EdgeInsets.only(right: 10),
                     child: TextButton(
                       style: TextButton.styleFrom(
                         backgroundColor: Colors.orange.shade700,
