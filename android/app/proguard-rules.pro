@@ -1,0 +1,1 @@
+-keep class me.cxo2.otoge.BuildConfig { *; }
