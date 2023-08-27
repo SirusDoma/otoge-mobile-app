@@ -36,7 +36,6 @@ class _MainPageState extends State<MainPage> {
   LatLngBounds? _bounds;
   bool _mapMoving = false, _mapDragging = false, _scrolling = false;
   LatLng _currentPosition = const LatLng(0, 0);
-  LatLng?_lastPosition;
 
   @override
   void initState() {
@@ -80,12 +79,7 @@ class _MainPageState extends State<MainPage> {
                 }
               },
               onMapMoved: () async {
-                _lastPosition = _currentPosition;
                 setState(() {
-                  if (_currentPosition != _lastPosition) {
-                    _currentPosition = _currentPosition;
-                  }
-
                   _mapMoving = false;
                   _mapDragging = false;
                 });
@@ -228,6 +222,10 @@ class _MainPageState extends State<MainPage> {
 
     setState(() => _bottomSheetController = controller);
 
+    _watchBottomSheet();
+  }
+
+  Future _watchBottomSheet() async {
     await _bottomSheetController!.closed;
     setState(() => _bottomSheetController = null);
   }
@@ -235,7 +233,11 @@ class _MainPageState extends State<MainPage> {
   Future _updateStates(BuildContext context, List<Store> stores) async {
     final markers = _computeMarkers(stores, (store) async {
       final index = stores.indexOf(store);
-      _showList(context);
+      if (_bottomSheetController == null) {
+        await _showList(context);
+        await Future.delayed(const Duration(milliseconds: 200)); // Hack: wait PageBuilder built
+      }
+
       if (_pageController.hasClients) {
         _scrolling = true;
         await _pageController.animateToPage(
@@ -294,23 +296,23 @@ class _MainPageState extends State<MainPage> {
     ).toSet();
   }
 
-  LatLngBounds? _computeBounds(List<LatLng> bounds) {
-    if (bounds.isEmpty) {
+  LatLngBounds? _computeBounds(List<LatLng> positions) {
+    if (positions.isEmpty) {
       return null;
     }
 
-    var first = bounds.first;
+    var first = positions.first;
     var s = first.latitude,
         n = first.latitude,
         w = first.longitude,
         e = first.longitude;
 
-    if (bounds.length == 1) {
-      bounds.add(LatLng(s - 0.003, w - 0.003));
-      bounds.add(LatLng(s + 0.003, w + 0.003));
+    if (positions.length == 1) {
+      positions.add(LatLng(s - 0.003, w - 0.003));
+      positions.add(LatLng(s + 0.003, w + 0.003));
     }
 
-    for (final latlng in bounds) {
+    for (final latlng in positions) {
       s = min(s, latlng.latitude);
       n = max(n, latlng.latitude);
       w = min(w, latlng.longitude);

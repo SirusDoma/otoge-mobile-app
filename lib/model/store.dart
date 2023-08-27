@@ -1,6 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:otoge_mobile_app/model/cabinet.dart';
-import 'package:otoge_mobile_app/model/game.dart';
 
 part 'store.g.dart';
 
