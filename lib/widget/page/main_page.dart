@@ -83,7 +83,7 @@ class _MainPageState extends State<MainPage> {
                 _lastPosition = _currentPosition;
                 setState(() {
                   if (_currentPosition != _lastPosition) {
-                    setState(() => _currentPosition = _currentPosition);
+                    _currentPosition = _currentPosition;
                   }
 
                   _mapMoving = false;
