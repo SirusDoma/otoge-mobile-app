@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:flutter_config/flutter_config.dart';
 import 'package:otoge_mobile_app/model/store.dart';
 
 import 'package:otoge_mobile_app/extension/response_extension.dart';
@@ -23,7 +22,7 @@ class OtogeApi {
   OtogeApi();
 
   late final http.Client _client = http.Client();
-  late final String _apiUrl = !kIsWeb ? FlutterConfig.get('OTOGE_API_URL') : dotenv.env['OTOGE_API_URL'];
+  late final String _apiUrl = dotenv.env['OTOGE_API_URL'] ?? '';
 
   Future<List<Store>> searchByPosition(double lat, double lng) async {
     var url = Uri.https(_apiUrl, '/store/searchByPosition', {
