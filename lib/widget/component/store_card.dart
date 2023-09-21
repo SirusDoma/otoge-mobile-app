@@ -1,4 +1,5 @@
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:map_launcher/map_launcher.dart';
@@ -106,8 +107,8 @@ class StoreCard extends StatelessWidget {
   }
 
   Future _launchMap(BuildContext context, Store store) async {
-    MapType? mapType = MapType.google;
-    if (await MapLauncher.isMapAvailable(MapType.google) != true) {
+    MapType? mapType = kIsWeb ? null : MapType.google;
+    if (!kIsWeb && await MapLauncher.isMapAvailable(MapType.google) != true) {
       var maps = await MapLauncher.installedMaps;
       if (maps.isNotEmpty) {
         mapType = maps.first.mapType;
